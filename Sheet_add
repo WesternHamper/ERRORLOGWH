@@ -9,11 +9,23 @@ Application.ScreenUpdating = False
 Dim NewName As String
 Another:
 NewName = InputBox("New Sheet Name?")
-    If NewName = "" Then Exit Sub
-    If Not ThisWorkbook.Worksheets(NewName) Is Nothing Then
-        MsgBox "A sheet with this name already exists. Please select another name"
-        Exit Sub
-    End If
+If NewName = "" Then Exit Sub
+    
+Dim testWS As Worksheet
+Do Until Err.Number = 0
+    NewName = InputBox("Please enter new sheet name:")
+    On Error Resume Next
+    Set testWS = ThisWorkbook.Worksheets(NewName)
+    Select Case Err.Number
+        Case 0, 9
+        ' 0 is okay, 9 is redo...
+        Case Else
+        ' ...anything else is unexpected and should be rooted out.
+            MsgBox Err.Description
+            End
+    End Select
+Loop
+On Error GoTo 0
 
 ' Added to check if input is empty
 Sheets.Add After:=ActiveSheet
