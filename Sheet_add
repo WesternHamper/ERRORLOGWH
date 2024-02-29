@@ -1,0 +1,127 @@
+Sub Sheet_Add1()
+'
+' Sheet Add Macro
+'
+' Keyboard Shortcut: Ctrl+Shift+N
+'
+Application.ScreenUpdating = False
+
+Dim NewName As String
+Another:
+NewName = InputBox("New Sheet Name?")
+    If NewName = "" Then Exit Sub
+    If Not ThisWorkbook.Worksheets(NewName) Is Nothing Then
+        MsgBox "A sheet with this name already exists. Please select another name"
+        Exit Sub
+    End If
+
+' Added to check if input is empty
+Sheets.Add After:=ActiveSheet
+ActiveSheet.Name = NewName
+ActiveWindow.DisplayGridlines = False
+Columns("A:D").Select
+Selection.ColumnWidth = 1
+Columns("E").Select
+Selection.ColumnWidth = 34
+Selection.HorizontalAlignment = xlLeft
+Columns("F:H").Select
+Selection.ColumnWidth = 10.25
+Columns("F").Select
+Selection.HorizontalAlignment = xlRight
+Columns("G").Select
+Selection.HorizontalAlignment = xlLeft
+Columns("I").Select
+Selection.ColumnWidth = 0.25
+Selection.HorizontalAlignment = xlLeft
+Columns("J:Z").Select
+Selection.ColumnWidth = 10.25
+
+ActiveSheet.Rows("1:1").RowHeight = 26.25
+ActiveSheet.Cells(1, 1).Value = "[Placeholder]"
+ActiveSheet.Cells(1, 1).Font.Name = "Arial"
+ActiveSheet.Cells(1, 1).Font.Size = 20
+
+ActiveSheet.Cells(3, 1).Value = "[Placeholder]"
+ActiveSheet.Cells(3, 1).Font.Name = "Arial"
+ActiveSheet.Cells(3, 1).Font.Size = 10
+ActiveSheet.Cells(3, 1).Font.Bold = True
+
+ActiveSheet.Cells(10, 1).Value = "[Placeholder]"
+ActiveSheet.Cells(10, 1).Font.Name = "Arial"
+ActiveSheet.Cells(10, 1).Font.Size = 10
+ActiveSheet.Cells(10, 1).Font.Bold = True
+
+ActiveSheet.Cells(8, 6).Value = "Constant"
+ActiveSheet.Cells(8, 6).Font.Name = "Arial"
+ActiveSheet.Cells(8, 6).Font.Size = 8
+ActiveSheet.Cells(8, 6).Font.Bold = True
+ActiveSheet.Cells(8, 6).HorizontalAlignment = xlRight
+
+ActiveSheet.Cells(8, 7).Value = "Unit"
+ActiveSheet.Cells(8, 7).Font.Name = "Arial"
+ActiveSheet.Cells(8, 7).Font.Size = 8
+ActiveSheet.Cells(8, 7).Font.Bold = True
+ActiveSheet.Cells(8, 7).HorizontalAlignment = xlLeft
+
+ActiveSheet.Cells(8, 8).Value = "Total"
+ActiveSheet.Cells(8, 8).Font.Name = "Arial"
+ActiveSheet.Cells(8, 8).Font.Size = 8
+ActiveSheet.Cells(8, 8).Font.Bold = True
+ActiveSheet.Cells(8, 8).HorizontalAlignment = xlRight
+
+ActiveSheet.Cells(3, 8).Value = "Periods"
+ActiveSheet.Cells(3, 8).Font.Name = "Arial"
+ActiveSheet.Cells(3, 8).Font.Size = 8
+ActiveSheet.Cells(3, 8).Font.Bold = True
+ActiveSheet.Cells(3, 8).HorizontalAlignment = xlRight
+
+Range("I1:I500").Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 8421504
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+
+ActiveSheet.Cells(9, 9).Select
+ActiveWindow.FreezePanes = True
+
+Range("A1").Select
+
+'Number Sequence
+On Error Resume Next
+    
+Dim startingCell As Range
+Set startingCell = Selection.Cells(3, 10)
+Dim currentValue As Integer
+currentValue = 0
+
+Dim numCells As Integer
+numCells = InputBox("How many periods to the right?", "Sequence Length")
+
+Dim currentCell As Range
+Set currentCell = startingCell
+
+Dim i As Integer
+For i = 0 To numCells
+    currentCell.Value = currentValue
+    currentValue = currentValue + 1
+    Set currentCell = currentCell.Offset(0, 1)
+    If i > 1 Then
+        currentCell.Value = currentCell.Offset(0, 0).Value
+    End If
+Next i
+
+Dim startCell As Range
+Set startCell = activeCell
+
+Selection.End(xlToRight).Select
+currentCell.Offset(0, 0).Columns("A:A").EntireColumn.Select
+Range(Selection, Selection.End(xlToRight)).Select
+Selection.EntireColumn.Hidden = True
+startCell.Activate
+        
+Application.ScreenUpdating = True
+
+End Sub
