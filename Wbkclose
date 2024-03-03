@@ -1,0 +1,63 @@
+Sub Save_CloseAll1()
+'
+' Save and Close All Worksheets Macro
+'
+' Keyboard Shortcut: Shift+Esc
+'
+ScreenUpdating = False
+    Dim wkb As Workbook
+    Dim saveDate As Date
+    Dim saveTime As Variant
+    Dim formatTime As String
+    Dim formatDate As String
+    Dim backupFolder As String
+    Dim backupFileName As String
+    Dim newWorkbook As Workbook
+    saveDate = Date
+    saveTime = Time
+        
+    formatTime = Format(saveTime, " hh.mm.ss AM/PM)")
+    formatDate = Format(saveDate, "(mm-dd-yyyy,")
+     
+    With Application
+         
+        For Each wkb In Workbooks
+             
+            With wkb
+
+                If Not wkb.ReadOnly Then
+                     
+                    .Save
+                     
+                End If
+                 
+                If .Name <> ThisWorkbook.Name Then
+                     
+                    .Close
+                     
+                End If
+                 
+                If wkb.Path <> "" Then ' Check if the workbook has been saved before
+                    wkb.Save
+                    wkb.Close
+                
+                    Else
+                ' Create a new workbook and save it in the temp folder with date and timestamp
+                Set newWorkbook = Workbooks.Add
+                backupFileName = "Untitled" & " – BACKUP – " & formatDate & " (" & formatTime & ").xlsx"
+                newWorkbook.SaveAs Filename:=backupFolder & backupFileName
+                newWorkbook.Close SaveChanges:=False
+
+                End If
+
+            End With
+             
+        Next wkb
+
+        .Quit
+    End With
+
+ScreenUpdating = True
+
+End Sub
+
